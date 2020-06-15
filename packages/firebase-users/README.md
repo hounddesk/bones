@@ -4,8 +4,13 @@ Firebase users plugin for Hapi
 
 ## Usage
 
-```
-const firebaseUsers = require('@hounddesk/firebase-users');
+## Available operations
 
-// TODO: DEMONSTRATE API
-```
+- Create user (Password policy support)
+- Delete user
+- Update user
+- Get user by Id
+- Get user by phone number
+- Get user by email
+- Set user custom claims
+- List users (with pagination)
