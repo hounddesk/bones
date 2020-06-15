@@ -1,0 +1,37 @@
+{
+  "name": "@hounddesk/hapi-bearer-parser",
+  "version": "1.1.0",
+  "description": "Hapi Bearer token parser",
+  "keywords": [
+    "bearer"
+  ],
+  "author": "Ruben Restrepo",
+  "homepage": "https://github.com/hounddesk/bones#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hounddesk/bones.git"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/hounddesk/bones/issues"
+  },
+  "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@hapi/hoek": "^9.0.4"
+  },
+  "gitHead": "8eeca75e93a46514a7c2f61183b9b41b3feee657"
+}

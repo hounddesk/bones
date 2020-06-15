@@ -1,0 +1,35 @@
+{
+  "name": "@hounddesk/password-policy",
+  "version": "1.1.0",
+  "description": "Password policy for Node",
+  "keywords": [
+    "password"
+  ],
+  "author": "Ruben Restrepo",
+  "homepage": "https://github.com/hounddesk/bones#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hounddesk/bones.git"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/hounddesk/bones/issues"
+  },
+  "dependencies": {
+    "password-sheriff": "^1.1.0"
+  },
+  "gitHead": "8eeca75e93a46514a7c2f61183b9b41b3feee657"
+}

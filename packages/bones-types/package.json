@@ -1,0 +1,36 @@
+{
+  "name": "@hounddesk/bones-types",
+  "version": "1.3.0",
+  "description": "Types",
+  "keywords": [
+    "types"
+  ],
+  "author": "Ruben Restrepo",
+  "homepage": "https://github.com/hounddesk/bones#readme",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hounddesk/bones.git"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/hounddesk/bones/issues"
+  },
+  "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@hapi/hapi": "^19.1.1",
+    "@hapi/hoek": "^9.0.4",
+    "@types/hapi__hapi": "^19.0.3"
+  },
+  "gitHead": "8eeca75e93a46514a7c2f61183b9b41b3feee657"
+}
