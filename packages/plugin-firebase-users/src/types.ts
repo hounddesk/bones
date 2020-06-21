@@ -1,4 +1,4 @@
-import Hapi from '@Hapi/Hapi';
+import Hapi from '@hapi/hapi';
 import FirebaseAdmin from 'firebase-admin';
 import { Logger } from '@hounddesk/bones-types';
 
