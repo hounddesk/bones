@@ -1,15 +1,16 @@
 import Hapi from '@hapi/hapi';
-import hapiFirebasePlugin from '../src/index';
-import { loggerMocks } from './mocks';
+import pluginFirebaseAuthz from '../src/index';
+import { loggerMocks, firebaseApp } from './mocks';
 
 describe('Hapi Firebase plugin test suite', () => {
   describe('When an access token is not provided', () => {
     it('it should Unauthorized the request', async () => {
       const server = Hapi.server();
+      const authMock = jest.fn();
       await server.register({
-        plugin: hapiFirebasePlugin,
+        plugin: pluginFirebaseAuthz,
         options: {
-          serviceAccount: {},
+          serviceAccount: firebaseApp(authMock),
           logger: loggerMocks,
         },
       });
@@ -51,11 +52,9 @@ describe('Hapi Firebase plugin test suite', () => {
       });
       const server = Hapi.server();
       await server.register({
-        plugin: hapiFirebasePlugin,
+        plugin: pluginFirebaseAuthz,
         options: {
-          serviceAccount: {
-            auth: authMock,
-          },
+          serviceAccount: firebaseApp(authMock),
           logger: loggerMocks,
           userClaims: ['admin'],
         },
@@ -102,11 +101,9 @@ describe('Hapi Firebase plugin test suite', () => {
       });
       const server = Hapi.server();
       await server.register({
-        plugin: hapiFirebasePlugin,
+        plugin: pluginFirebaseAuthz,
         options: {
-          serviceAccount: {
-            auth: authMock,
-          },
+          serviceAccount: firebaseApp(authMock),
           logger: loggerMocks,
           userClaims: ['admin'],
         },
@@ -150,11 +147,9 @@ describe('Hapi Firebase plugin test suite', () => {
       });
       const server = Hapi.server();
       await server.register({
-        plugin: hapiFirebasePlugin,
+        plugin: pluginFirebaseAuthz,
         options: {
-          serviceAccount: {
-            auth: authMock,
-          },
+          serviceAccount: firebaseApp(authMock),
           logger: loggerMocks,
           userClaims: ['admin'],
         },

@@ -1,0 +1,31 @@
+{
+  "name": "bones-integration-tests",
+  "author": "Ruben Restrepo",
+  "homepage": "https://github.com/hounddesk/bones#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hounddesk/bones.git"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/hounddesk/bones/issues"
+  },
+  "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@hapi/hapi": "^19.1.1",
+    "@hapi/joi": "^17.1.1",
+    "@hounddesk/bones-types": "^1.2.0",
+    "@hounddesk/hapi-bearer-parser": "^1.1.0",
+    "@hounddesk/password-policy": "^1.1.0",
+    "@hounddesk/plugin-firebase-authz": "^1.1.0",
+    "@hounddesk/plugin-firebase-users": "^1.1.0",
+    "@types/convict": "^5.2.1",
+    "convict": "^6.0.0",
+    "dotenv": "^8.2.0",
+    "firebase-admin": "^8.12.1"
+  }
+}
