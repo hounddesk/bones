@@ -1,8 +1,13 @@
 import Hapi from '@hapi/hapi';
 import Joi from '@hapi/joi';
 /** Types */
-import { FirebaseUsersPluginOptions } from './types';
-import { AuthStrategy, HapiAuthStrategy } from '@hounddesk/bones-types';
+import {
+  FirebaseUsersPluginOptions,
+  UserAction,
+  ClaimAction,
+  AuthStrategy,
+} from './types';
+import { HapiAuthStrategy, HapiPlugin } from '@hounddesk/bones-types';
 /** Schemas */
 import UserSchema from './schemas/user';
 /** Controllers */
@@ -15,41 +20,48 @@ import {
   setCustomUserClaims,
 } from './userController';
 
+export function filterAction(
+  actionName: string,
+  strategies?: Array<AuthStrategy> | undefined
+): AuthStrategy | undefined {
+  return strategies?.filter((s) => s.actionName === actionName)[0];
+}
+
 export function getStrategy(
   actionName: string,
   strategies?: Array<AuthStrategy> | undefined
 ): HapiAuthStrategy | undefined {
-  const filteredStrategy = strategies?.filter(
-    (s) => s.actionName === actionName
-  )[0];
+  const filteredStrategy = filterAction(actionName, strategies);
   return filteredStrategy
     ? { strategy: filteredStrategy.strategy, scope: filteredStrategy.scope }
     : undefined;
 }
 
-const firebaseUsers = {
-  name: 'hapi-firebase-users',
+const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
+  name: 'plugin-firebase-users',
   register: function (
     server: Hapi.Server,
     options: FirebaseUsersPluginOptions
   ): void {
     const routePrefix = options.routePrefix || '';
-    const nop = () => {
-      return;
+
+    const nop = (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
+      return h.continue;
     };
+
     server.route({
       method: 'POST',
       path: `${routePrefix}/users`,
       options: {
-        auth: getStrategy('create', options.strategies) || false,
+        auth: getStrategy(UserAction.Create, options.strategies) || false,
         validate: {
           payload: UserSchema,
         },
         pre: [
-          {
-            method: () => options.passwordPolicy || nop,
-          },
           { method: () => options.serviceAccount, assign: 'firebase' },
+          {
+            method: options.passwordPolicy || nop,
+          },
         ],
       },
       handler: createUser,
@@ -58,7 +70,7 @@ const firebaseUsers = {
       method: 'POST',
       path: `${routePrefix}/users/{uid}/claims`,
       options: {
-        auth: getStrategy('claims', options.strategies) || false,
+        auth: getStrategy(ClaimAction.Create, options.strategies) || false,
         validate: {
           params: {
             uid: Joi.string().required(),
@@ -75,7 +87,7 @@ const firebaseUsers = {
       method: 'DELETE',
       path: `${routePrefix}/users/{uid}`,
       options: {
-        auth: getStrategy('delete', options.strategies) || false,
+        auth: getStrategy(UserAction.Delete, options.strategies) || false,
         validate: {
           params: {
             uid: Joi.string().required(),
@@ -89,7 +101,7 @@ const firebaseUsers = {
       method: 'PATCH',
       path: `${routePrefix}/users/{uid}`,
       options: {
-        auth: getStrategy('update', options.strategies) || false,
+        auth: getStrategy(UserAction.Update, options.strategies) || false,
         validate: {
           params: {
             uid: Joi.string().required(),
@@ -105,7 +117,7 @@ const firebaseUsers = {
       method: 'GET',
       path: `${routePrefix}/users/{uid}`,
       options: {
-        auth: getStrategy('get', options.strategies) || false,
+        auth: getStrategy(UserAction.GetById, options.strategies) || false,
         validate: {
           params: {
             uid: Joi.string().required(),
@@ -121,8 +133,8 @@ const firebaseUsers = {
       path: `${routePrefix}/users/email/{email}`,
       options: {
         auth:
-          getStrategy('get', options.strategies) ||
-          getStrategy('getByEmail', options.strategies) ||
+          getStrategy(UserAction.GetById, options.strategies) ||
+          getStrategy(UserAction.GetByEmail, options.strategies) ||
           false,
         validate: {
           params: {
@@ -139,9 +151,9 @@ const firebaseUsers = {
       path: `${routePrefix}/users/phone/{phoneNumber}`,
       options: {
         auth:
-          getStrategy('get', options.strategies) ||
-          getStrategy('getByEmail', options.strategies) ||
-          getStrategy('getByPhoneNumber', options.strategies) ||
+          getStrategy(UserAction.GetById, options.strategies) ||
+          getStrategy(UserAction.GetByEmail, options.strategies) ||
+          getStrategy(UserAction.GetByPhone, options.strategies) ||
           false,
         validate: {
           params: {
@@ -157,7 +169,7 @@ const firebaseUsers = {
       method: 'GET',
       path: `${routePrefix}/users/list`,
       options: {
-        auth: getStrategy('list', options.strategies) || false,
+        auth: getStrategy(UserAction.List, options.strategies) || false,
         validate: {
           query: {
             limit: Joi.number().default(10),
@@ -171,4 +183,4 @@ const firebaseUsers = {
   },
 };
 
-export default firebaseUsers;
+export default pluginFirebaseUsers;

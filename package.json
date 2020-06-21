@@ -45,8 +45,8 @@
     "lerna:bootstrap": "lerna bootstrap",
     "test": "jest",
     "format": "prettier --write --single-quote \"packages\"",
-    "lint": "eslint . --ext .js,.ts",
-    "lint:fix": "eslint . --fix --ext .js,.ts",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --fix --ext .ts",
     "coverage": "jest --coverage",
     "test:clear-cache": "jest --clearCache"
   },

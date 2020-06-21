@@ -36,8 +36,8 @@ function pluginImplementation(
   };
 }
 
-const hapiFirebase: HapiPlugin = {
-  name: 'hapi-firebase',
+const pluginFirebaseAuthz: HapiPlugin<FirebaseAuthzPluginOptions> = {
+  name: 'plugin-firebase-authz',
   register: function (
     server: Hapi.Server,
     settings: FirebaseAuthzPluginOptions
@@ -49,4 +49,4 @@ const hapiFirebase: HapiPlugin = {
   },
 };
 
-export default hapiFirebase;
+export default pluginFirebaseAuthz;

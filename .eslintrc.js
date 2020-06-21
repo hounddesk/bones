@@ -4,6 +4,7 @@ module.exports = {
     browser: false,
     commonjs: true,
     es6: true,
+    node: true,
   },
   plugins: ['@typescript-eslint', 'jest'],
   extends: [

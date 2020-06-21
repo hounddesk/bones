@@ -1,6 +1,5 @@
 import FirebaseAdmin from 'firebase-admin';
 import { Logger } from '@hounddesk/bones-types';
-
 export interface FirebaseAuthzPluginOptions {
   logger: Logger;
   serviceAccount: FirebaseAdmin.app.App;
