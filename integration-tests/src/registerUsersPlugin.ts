@@ -24,10 +24,11 @@ export default async function registerUsersPlugin(
   await server.register({
     plugin: pluginFirebaseUsers,
     options: {
+      isPublicAPI: false,
       logger: console,
       serviceAccount: firebaseApp,
       passwordPolicy: customPasswordPolicy,
-      beforeUserCreate: checkPassport,
+      beforeCreateUser: checkPassport,
       extrasSchema: Joi.object({
         passport: Joi.string().min(2),
       }),

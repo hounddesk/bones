@@ -52,5 +52,8 @@ export interface FirebaseUsersPluginOptions {
   extrasSchema?: Joi.SchemaLike;
   isPublicAPI?: boolean;
   passwordPolicy?(request: Hapi.Request, h: Hapi.ResponseToolkit);
-  beforeUserCreate?(request: Hapi.Request, h: Hapi.ResponseToolkit);
+  beforeCreateUser?(request: Hapi.Request, h: Hapi.ResponseToolkit);
+  beforeUpdateUser?(request: Hapi.Request, h: Hapi.ResponseToolkit);
+  beforeDeleteUser?(request: Hapi.Request, h: Hapi.ResponseToolkit);
+  beforeGetUser?(request: Hapi.Request, h: Hapi.ResponseToolkit);
 }
