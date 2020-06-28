@@ -3,6 +3,7 @@
   "author": "Ruben Restrepo",
   "homepage": "https://github.com/hounddesk/bones#readme",
   "license": "MIT",
+  "private": true,
   "main": "dist/index.js",
   "repository": {
     "type": "git",
