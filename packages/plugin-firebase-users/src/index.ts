@@ -66,7 +66,7 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
             method: options.passwordPolicy || nop,
           },
           {
-            method: options.beforeUserCreate || nop,
+            method: options.beforeCreateUser || nop,
           },
         ],
       },
@@ -85,7 +85,12 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
           },
           payload: UserSchema,
         },
-        pre: [{ method: () => options.serviceAccount, assign: 'firebase' }],
+        pre: [
+          { method: () => options.serviceAccount, assign: 'firebase' },
+          {
+            method: options.beforeUpdateUser || nop,
+          },
+        ],
       },
       handler: updateUser,
     });
@@ -104,9 +109,35 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
             extras: Joi.boolean().default(false),
           },
         },
-        pre: [{ method: () => options.serviceAccount, assign: 'firebase' }],
+        pre: [
+          { method: () => options.serviceAccount, assign: 'firebase' },
+          {
+            method: options.beforeGetUser || nop,
+          },
+        ],
       },
       handler: getUser.byId,
+    });
+
+    // Delete user
+    server.route({
+      method: 'DELETE',
+      path: `${routePrefix}/users/{uid}`,
+      options: {
+        auth: getStrategy(UserAction.Delete, options.strategies) || false,
+        validate: {
+          params: {
+            uid: Joi.string().required(),
+          },
+        },
+        pre: [
+          { method: () => options.serviceAccount, assign: 'firebase' },
+          {
+            method: options.beforeDeleteUser || nop,
+          },
+        ],
+      },
+      handler: deleteUser,
     });
 
     // Non Public APIs endpoints
@@ -129,22 +160,6 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
           pre: [{ method: () => options.serviceAccount, assign: 'firebase' }],
         },
         handler: setCustomUserClaims,
-      });
-
-      // Delete user
-      server.route({
-        method: 'DELETE',
-        path: `${routePrefix}/users/{uid}`,
-        options: {
-          auth: getStrategy(UserAction.Delete, options.strategies) || false,
-          validate: {
-            params: {
-              uid: Joi.string().required(),
-            },
-          },
-          pre: [{ method: () => options.serviceAccount, assign: 'firebase' }],
-        },
-        handler: deleteUser,
       });
 
       // Get user by email
