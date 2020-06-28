@@ -1,5 +1,5 @@
 import Hapi from '@hapi/hapi';
-import Joi, { func } from '@hapi/joi';
+import Joi from '@hapi/joi';
 import pluginFirebaseUsers from '../src/index';
 import { firebaseApp } from './mocks';
 interface CustomUser {
