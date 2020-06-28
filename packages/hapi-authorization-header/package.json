@@ -1,6 +1,6 @@
 {
   "name": "@hounddesk/hapi-authorization-header",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Hapi authorization header parser and utilities",
   "keywords": [
     "hapi",
@@ -33,7 +33,7 @@
   "dependencies": {
     "@hapi/boom": "^9.1.0",
     "@hapi/hoek": "^9.0.4",
-    "@hounddesk/hapi-bearer-parser": "^1.1.0"
+    "@hounddesk/hapi-bearer-parser": "^1.1.1"
   },
   "gitHead": "8eeca75e93a46514a7c2f61183b9b41b3feee657"
 }
