@@ -1,6 +1,7 @@
 import Hapi from '@hapi/hapi';
 import FirebaseAdmin from 'firebase-admin';
 import { Logger } from '@hounddesk/bones-types';
+import Joi from '@hapi/joi';
 
 export enum UserAction {
   Create = 'create',
@@ -25,6 +26,12 @@ export interface AuthStrategy {
 export interface PasswordValidator {
   validate(password: string): boolean;
 }
+
+export interface CustomClaims {
+  name: string;
+  value: boolean;
+}
+
 export interface User {
   uid: string;
   email: string;
@@ -33,7 +40,8 @@ export interface User {
   photoURL: string;
   disabled: boolean;
   password: string;
-  claims?: Array<string> | undefined;
+  claims?: Record<string, unknown>;
+  extras?: Record<string, unknown>;
 }
 
 export interface FirebaseUsersPluginOptions {
@@ -42,4 +50,6 @@ export interface FirebaseUsersPluginOptions {
   strategies?: Array<AuthStrategy>;
   routePrefix?: string;
   passwordPolicy?(request: Hapi.Request, h: Hapi.ResponseToolkit);
+  extrasSchema?: Joi.SchemaLike;
+  beforeUserCreate?(request: Hapi.Request, h: Hapi.ResponseToolkit);
 }

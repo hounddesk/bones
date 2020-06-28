@@ -11,7 +11,7 @@ export default function passwordPolicy(
 ): unknown {
   const payload = request.payload as User;
   Hoek.assert(
-    isPasswordValid(payload.password, PasswordPolicyType.Complex) === true,
+    isPasswordValid(payload.password, PasswordPolicyType.Low) === true,
     Boom.badRequest('invalid password')
   );
   return h.continue;
