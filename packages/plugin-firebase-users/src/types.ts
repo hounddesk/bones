@@ -49,7 +49,8 @@ export interface FirebaseUsersPluginOptions {
   serviceAccount: FirebaseAdmin.app.App;
   strategies?: Array<AuthStrategy>;
   routePrefix?: string;
-  passwordPolicy?(request: Hapi.Request, h: Hapi.ResponseToolkit);
   extrasSchema?: Joi.SchemaLike;
+  isPublicAPI?: boolean;
+  passwordPolicy?(request: Hapi.Request, h: Hapi.ResponseToolkit);
   beforeUserCreate?(request: Hapi.Request, h: Hapi.ResponseToolkit);
 }

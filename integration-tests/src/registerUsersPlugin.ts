@@ -17,7 +17,7 @@ function checkPassport(
   return h.continue;
 }
 
-export default async function registerAuthzPlugin(
+export default async function registerUsersPlugin(
   server: Hapi.Server,
   firebaseApp: admin.app.App
 ): Promise<void> {
