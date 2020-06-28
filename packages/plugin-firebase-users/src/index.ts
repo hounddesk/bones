@@ -45,9 +45,7 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
   ): void {
     const routePrefix = options.routePrefix || '';
 
-    const nop = (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
-      return h.continue;
-    };
+    const nop = (request: Hapi.Request, h: Hapi.ResponseToolkit) => h.continue;
 
     server.route({
       method: 'POST',
@@ -59,8 +57,12 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
         },
         pre: [
           { method: () => options.serviceAccount, assign: 'firebase' },
+          { method: () => options.extrasSchema || nop, assign: 'extrasSchema' },
           {
             method: options.passwordPolicy || nop,
+          },
+          {
+            method: options.beforeUserCreate || nop,
           },
         ],
       },
@@ -76,7 +78,7 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
             uid: Joi.string().required(),
           },
           payload: {
-            claims: Joi.array().items(Joi.string()).min(1),
+            claims: Joi.object(),
           },
         },
         pre: [{ method: () => options.serviceAccount, assign: 'firebase' }],
@@ -122,6 +124,9 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
           params: {
             uid: Joi.string().required(),
           },
+          query: {
+            extras: Joi.boolean().default(false),
+          },
         },
         pre: [{ method: () => options.serviceAccount, assign: 'firebase' }],
       },
@@ -139,6 +144,10 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
         validate: {
           params: {
             email: Joi.string().required(),
+            extras: Joi.boolean().default(false),
+          },
+          query: {
+            extras: Joi.boolean().default(false),
           },
         },
         pre: [{ method: () => options.serviceAccount, assign: 'firebase' }],
@@ -158,6 +167,9 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
         validate: {
           params: {
             phoneNumber: Joi.string().required(),
+          },
+          query: {
+            extras: Joi.boolean().default(false),
           },
         },
         pre: [{ method: () => options.serviceAccount, assign: 'firebase' }],

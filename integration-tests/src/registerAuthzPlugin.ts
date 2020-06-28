@@ -12,7 +12,7 @@ export default async function registerAuthzPlugin(
     options: {
       serviceAccount: firebaseApp,
       logger: console,
-      userClaims: ['admin'], // optional
+      userClaims: ['admin', 'list:users'], // optional
       schemeName: 'firebase', // optional, by default will use firebase
     },
   });

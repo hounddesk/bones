@@ -9,4 +9,6 @@ export default Joi.object<User>({
   displayName: Joi.string(),
   photoURL: Joi.string(),
   disabled: Joi.bool().default(false),
+  extras: Joi.object(),
+  claims: Joi.object(),
 });
