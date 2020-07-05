@@ -46,6 +46,11 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
     const routePrefix = options.routePrefix || '';
 
     const nop = (request: Hapi.Request, h: Hapi.ResponseToolkit) => h.continue;
+    const identityResponse = (
+      request: Hapi.Request,
+      h: Hapi.ResponseToolkit,
+      response: unknown
+    ) => response;
 
     // Public APIs endpoints
     // For security reasons by default, only register basic operations.
@@ -68,6 +73,10 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
           {
             method: options.beforeCreateUser || nop,
           },
+          {
+            method: () => options.afterCreateUser || identityResponse,
+            assign: 'afterCreateUser',
+          },
         ],
       },
       handler: createUser,
@@ -89,6 +98,10 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
           { method: () => options.serviceAccount, assign: 'firebase' },
           {
             method: options.beforeUpdateUser || nop,
+          },
+          {
+            method: () => options.afterUpdateUser || identityResponse,
+            assign: 'afterUpdateUser',
           },
         ],
       },
@@ -114,6 +127,10 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
           {
             method: options.beforeGetUser || nop,
           },
+          {
+            method: () => options.afterGetUser || identityResponse,
+            assign: 'afterGetUser',
+          },
         ],
       },
       handler: getUser.byId,
@@ -134,6 +151,10 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
           { method: () => options.serviceAccount, assign: 'firebase' },
           {
             method: options.beforeDeleteUser || nop,
+          },
+          {
+            method: () => options.afterDeleteUser || identityResponse,
+            assign: 'afterDeleteUser',
           },
         ],
       },

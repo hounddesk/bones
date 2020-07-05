@@ -17,6 +17,33 @@ function checkPassport(
   return h.continue;
 }
 
+async function afterGetUser(
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit,
+  response: User
+): Promise<unknown> {
+  // You can call any other extra source here in order to enhance the response!
+  return response;
+}
+
+async function afterUpdateUser(
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit,
+  response: User
+): Promise<User> {
+  // You can call any other extra source here after a user is deleted
+  return response;
+}
+
+async function afterCreateUser(
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit,
+  response: User
+): Promise<User> {
+  // You can call any other extra source here after a user is deleted
+  return response;
+}
+
 export default async function registerUsersPlugin(
   server: Hapi.Server,
   firebaseApp: admin.app.App
@@ -29,6 +56,9 @@ export default async function registerUsersPlugin(
       serviceAccount: firebaseApp,
       passwordPolicy: customPasswordPolicy,
       beforeCreateUser: checkPassport,
+      afterGetUser,
+      afterCreateUser,
+      afterUpdateUser,
       extrasSchema: Joi.object({
         passport: Joi.string().min(2),
       }),

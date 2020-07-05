@@ -56,4 +56,24 @@ export interface FirebaseUsersPluginOptions {
   beforeUpdateUser?(request: Hapi.Request, h: Hapi.ResponseToolkit);
   beforeDeleteUser?(request: Hapi.Request, h: Hapi.ResponseToolkit);
   beforeGetUser?(request: Hapi.Request, h: Hapi.ResponseToolkit);
+  afterGetUser?(
+    request: Hapi.Request,
+    h: Hapi.ResponseToolkit,
+    response: unknown
+  );
+  afterCreateUser?(
+    request: Hapi.Request,
+    h: Hapi.ResponseToolkit,
+    response: unknown
+  );
+  afterUpdateUser?(
+    request: Hapi.Request,
+    h: Hapi.ResponseToolkit,
+    response: unknown
+  );
+  afterDeleteUser?(
+    request: Hapi.Request,
+    h: Hapi.ResponseToolkit,
+    response: unknown
+  );
 }
