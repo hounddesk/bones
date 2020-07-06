@@ -73,7 +73,7 @@ export default async function registerUsersPlugin(
       afterUpdateUser,
       afterUserSignin,
       signin_url:
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAStxfbY1MnbS9B0fB3OhJc5zgBfVpuxkU',
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=<Your_Key>',
       extrasSchema: Joi.object({
         passport: Joi.string().min(2),
       }),
