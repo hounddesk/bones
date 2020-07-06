@@ -2,7 +2,9 @@ import Hapi from '@hapi/hapi';
 import Boom from '@hapi/boom';
 import Joi from '@hapi/joi';
 import Hoek from '@hapi/hoek';
-import { User } from './types';
+import { User, UserSignin, UserSigninResult } from './types';
+import fetch from 'node-fetch';
+import { URLSearchParams } from 'url';
 
 function _validateExtras(user: User, request: Hapi.Request) {
   if (user.extras) {
@@ -15,7 +17,8 @@ function _validateExtras(user: User, request: Hapi.Request) {
 }
 
 export async function createUser(
-  request: Hapi.Request
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit
 ): Promise<User | Boom.Boom<unknown>> {
   try {
     const user = request.payload as User;
@@ -26,14 +29,16 @@ export async function createUser(
         .auth()
         .setCustomUserClaims(createdUser.uid, user.claims);
     }
+
     // Store custom properties in Firestore
     if (user.extras) {
       const db = request.pre.firebase.firestore();
       const document = db.collection('users').doc(createdUser.uid);
       await document.set(user.extras);
-      return { ...createdUser, ...user.extras } as User;
+      const response = { ...createdUser, ...user.extras } as User;
+      return await request.pre.afterCreateUser(request, h, response);
     }
-    return createdUser as User;
+    return await request.pre.afterCreateUser(request, h, createdUser);
   } catch (error) {
     return Boom.badRequest(error.message);
   }
@@ -49,14 +54,19 @@ export async function deleteUser(
     // Delete extras from firestore
     const db = request.pre.firebase.firestore();
     await db.collection('users').doc(uid).delete();
-    return h.response().code(200);
+    return await request.pre.afterDeleteUser(
+      request,
+      h,
+      h.response().code(200)
+    );
   } catch (error) {
     return Boom.badRequest(error.message);
   }
 }
 
 export async function updateUser(
-  request: Hapi.Request
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit
 ): Promise<User | unknown> {
   try {
     const user = request.payload as User;
@@ -68,9 +78,10 @@ export async function updateUser(
       const db = request.pre.firebase.firestore();
       const document = db.collection('users').doc(uid);
       await document.update(user.extras);
-      return { ...updatedUser, ...user.extras };
+      const response = { ...updatedUser, ...user.extras };
+      return await request.pre.afterUpdateUser(request, h, response);
     }
-    return updatedUser;
+    return await request.pre.afterUpdateUser(request, h, updatedUser);
   } catch (error) {
     return Boom.badRequest(error.message);
   }
@@ -87,12 +98,16 @@ async function getUserByEmail(request: Hapi.Request): Promise<User | unknown> {
   }
 }
 
-async function getUserById(request: Hapi.Request): Promise<User | unknown> {
+async function getUserById(
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit
+): Promise<User | unknown> {
   try {
     const { uid } = request.params;
     const { extras } = request.query;
     const user = await request.pre.firebase.auth().getUser(uid);
-    return assignUserExtras(user, request, !!extras);
+    const response = await assignUserExtras(user, request, !!extras);
+    return await request.pre.afterGetUser(request, h, response);
   } catch (error) {
     return Boom.badRequest(error.message);
   }
@@ -167,3 +182,28 @@ export const getUser = {
   byEmail: getUserByEmail,
   byPhoneNumber: getUserByPhoneNumber,
 };
+
+export async function userSignin(
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit
+): Promise<Hapi.ResponseObject | unknown> {
+  try {
+    Hoek.assert(request.pre.signin_url, 'signin_url option is required');
+    const { email, password } = request.payload as UserSignin;
+    const params = new URLSearchParams();
+    params.append('email', email);
+    params.append('password', password);
+    params.append('returnSecureToken', 'true');
+    const userSigninRequest = await fetch(request.pre.signin_url, {
+      method: 'POST',
+      body: params,
+    });
+    const response = (await userSigninRequest.json()) as UserSigninResult;
+    if (response.error) {
+      return Boom.forbidden(response.error.message);
+    }
+    return request.pre.afterUserSignin(request, h, response);
+  } catch (error) {
+    return Boom.badRequest(error.message);
+  }
+}

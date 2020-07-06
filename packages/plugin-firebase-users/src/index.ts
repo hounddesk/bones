@@ -10,6 +10,7 @@ import {
 import { HapiAuthStrategy, HapiPlugin } from '@hounddesk/bones-types';
 /** Schemas */
 import UserSchema from './schemas/user';
+import UserSignin from './schemas/userSignin';
 /** Controllers */
 import {
   createUser,
@@ -18,6 +19,7 @@ import {
   getUser,
   listUsers,
   setCustomUserClaims,
+  userSignin,
 } from './userController';
 
 export function filterAction(
@@ -46,6 +48,11 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
     const routePrefix = options.routePrefix || '';
 
     const nop = (request: Hapi.Request, h: Hapi.ResponseToolkit) => h.continue;
+    const identityResponse = (
+      request: Hapi.Request,
+      h: Hapi.ResponseToolkit,
+      response: unknown
+    ) => response;
 
     // Public APIs endpoints
     // For security reasons by default, only register basic operations.
@@ -68,6 +75,10 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
           {
             method: options.beforeCreateUser || nop,
           },
+          {
+            method: () => options.afterCreateUser || identityResponse,
+            assign: 'afterCreateUser',
+          },
         ],
       },
       handler: createUser,
@@ -89,6 +100,10 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
           { method: () => options.serviceAccount, assign: 'firebase' },
           {
             method: options.beforeUpdateUser || nop,
+          },
+          {
+            method: () => options.afterUpdateUser || identityResponse,
+            assign: 'afterUpdateUser',
           },
         ],
       },
@@ -114,6 +129,10 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
           {
             method: options.beforeGetUser || nop,
           },
+          {
+            method: () => options.afterGetUser || identityResponse,
+            assign: 'afterGetUser',
+          },
         ],
       },
       handler: getUser.byId,
@@ -135,9 +154,34 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
           {
             method: options.beforeDeleteUser || nop,
           },
+          {
+            method: () => options.afterDeleteUser || identityResponse,
+            assign: 'afterDeleteUser',
+          },
         ],
       },
       handler: deleteUser,
+    });
+
+    // Signin user
+    server.route({
+      method: 'POST',
+      path: `${routePrefix}/users/signin`,
+      options: {
+        auth: false,
+        validate: {
+          payload: UserSignin,
+        },
+        pre: [
+          { method: () => options.serviceAccount, assign: 'firebase' },
+          {
+            method: () => options.afterUserSignin || identityResponse,
+            assign: 'afterUserSignin',
+          },
+          { method: () => options.signin_url || nop, assign: 'signin_url' },
+        ],
+      },
+      handler: userSignin,
     });
 
     // Non Public APIs endpoints
