@@ -2,7 +2,9 @@ import Hapi from '@hapi/hapi';
 import Boom from '@hapi/boom';
 import Joi from '@hapi/joi';
 import Hoek from '@hapi/hoek';
-import { User } from './types';
+import { User, UserSignin, UserSigninResult } from './types';
+import fetch from 'node-fetch';
+import { URLSearchParams } from 'url';
 
 function _validateExtras(user: User, request: Hapi.Request) {
   if (user.extras) {
@@ -180,3 +182,28 @@ export const getUser = {
   byEmail: getUserByEmail,
   byPhoneNumber: getUserByPhoneNumber,
 };
+
+export async function userSignin(
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit
+): Promise<Hapi.ResponseObject | unknown> {
+  try {
+    Hoek.assert(request.pre.signin_url, 'signin_url option is required');
+    const { email, password } = request.payload as UserSignin;
+    const params = new URLSearchParams();
+    params.append('email', email);
+    params.append('password', password);
+    params.append('returnSecureToken', 'true');
+    const userSigninRequest = await fetch(request.pre.signin_url, {
+      method: 'POST',
+      body: params,
+    });
+    const response = (await userSigninRequest.json()) as UserSigninResult;
+    if (response.error) {
+      return Boom.forbidden(response.error.message);
+    }
+    return request.pre.afterUserSignin(request, h, response);
+  } catch (error) {
+    return Boom.badRequest(error.message);
+  }
+}

@@ -10,6 +10,7 @@ import {
 import { HapiAuthStrategy, HapiPlugin } from '@hounddesk/bones-types';
 /** Schemas */
 import UserSchema from './schemas/user';
+import UserSignin from './schemas/userSignin';
 /** Controllers */
 import {
   createUser,
@@ -18,6 +19,7 @@ import {
   getUser,
   listUsers,
   setCustomUserClaims,
+  userSignin,
 } from './userController';
 
 export function filterAction(
@@ -159,6 +161,27 @@ const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
         ],
       },
       handler: deleteUser,
+    });
+
+    // Signin user
+    server.route({
+      method: 'POST',
+      path: `${routePrefix}/users/signin`,
+      options: {
+        auth: false,
+        validate: {
+          payload: UserSignin,
+        },
+        pre: [
+          { method: () => options.serviceAccount, assign: 'firebase' },
+          {
+            method: () => options.afterUserSignin || identityResponse,
+            assign: 'afterUserSignin',
+          },
+          { method: () => options.signin_url || nop, assign: 'signin_url' },
+        ],
+      },
+      handler: userSignin,
     });
 
     // Non Public APIs endpoints

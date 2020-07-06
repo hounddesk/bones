@@ -51,6 +51,7 @@ export interface FirebaseUsersPluginOptions {
   routePrefix?: string;
   extrasSchema?: Joi.SchemaLike;
   isPublicAPI?: boolean;
+  signin_url?: string;
   passwordPolicy?(request: Hapi.Request, h: Hapi.ResponseToolkit);
   beforeCreateUser?(request: Hapi.Request, h: Hapi.ResponseToolkit);
   beforeUpdateUser?(request: Hapi.Request, h: Hapi.ResponseToolkit);
@@ -76,4 +77,23 @@ export interface FirebaseUsersPluginOptions {
     h: Hapi.ResponseToolkit,
     response: unknown
   );
+  afterUserSignin?(
+    request: Hapi.Request,
+    h: Hapi.ResponseToolkit,
+    response: unknown
+  );
+}
+
+export interface UserSignin {
+  email: string;
+  password: string;
+}
+
+export interface UserSigninError {
+  code: number;
+  message: string;
+}
+
+export interface UserSigninResult {
+  error?: UserSigninError;
 }

@@ -4,7 +4,10 @@ import Boom from '@hapi/boom';
 import * as admin from 'firebase-admin';
 import pluginFirebaseUsers from '@hounddesk/plugin-firebase-users';
 import customPasswordPolicy from './passwordPolicy';
-import { User } from '@hounddesk/plugin-firebase-users/lib/types';
+import {
+  User,
+  UserSigninResult,
+} from '@hounddesk/plugin-firebase-users/lib/types';
 
 function checkPassport(
   request: Hapi.Request,
@@ -44,6 +47,15 @@ async function afterCreateUser(
   return response;
 }
 
+async function afterUserSignin(
+  request: Hapi.Request,
+  h: Hapi.ResponseToolkit,
+  response: UserSigninResult
+): Promise<UserSigninResult> {
+  // You can call any other extra source here after a user signed in successfuly
+  return response;
+}
+
 export default async function registerUsersPlugin(
   server: Hapi.Server,
   firebaseApp: admin.app.App
@@ -59,6 +71,9 @@ export default async function registerUsersPlugin(
       afterGetUser,
       afterCreateUser,
       afterUpdateUser,
+      afterUserSignin,
+      signin_url:
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAStxfbY1MnbS9B0fB3OhJc5zgBfVpuxkU',
       extrasSchema: Joi.object({
         passport: Joi.string().min(2),
       }),
