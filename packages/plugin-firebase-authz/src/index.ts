@@ -38,6 +38,7 @@ function pluginImplementation(
 
 const pluginFirebaseAuthz: HapiPlugin<FirebaseAuthzPluginOptions> = {
   name: 'plugin-firebase-authz',
+  multiple: true,
   register: function (
     server: Hapi.Server,
     settings: FirebaseAuthzPluginOptions

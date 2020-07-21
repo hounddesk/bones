@@ -3,7 +3,7 @@ import Joi from '@hapi/joi';
 import Boom from '@hapi/boom';
 import * as admin from 'firebase-admin';
 import pluginFirebaseUsers from '@hounddesk/plugin-firebase-users';
-import customPasswordPolicy from './passwordPolicy';
+import customPasswordPolicy from '../../passwordPolicy';
 import {
   User,
   UserSigninResult,
@@ -84,7 +84,7 @@ export default async function registerUsersPlugin(
           scope: 'list:users',
         },
       ],
-      routePrefix: '/api',
+      routePrefix: '/web-admin/api',
     },
   });
 }

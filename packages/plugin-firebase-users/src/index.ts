@@ -41,6 +41,7 @@ export function getStrategy(
 
 const pluginFirebaseUsers: HapiPlugin<FirebaseUsersPluginOptions> = {
   name: 'plugin-firebase-users',
+  multiple: true,
   register: function (
     server: Hapi.Server,
     options: FirebaseUsersPluginOptions

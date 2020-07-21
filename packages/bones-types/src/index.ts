@@ -3,6 +3,7 @@ import hapi from '@hapi/hapi';
 export interface HapiPlugin<T> {
   name: string;
   register(server: hapi.Server, options?: T | undefined): void;
+  multiple: boolean;
 }
 
 export interface HapiAuthStrategy {

@@ -1,7 +1,8 @@
 import initializeFirebase from './initializeFirebase';
 import initializeServer from './initializeServer';
 import registerAuthzPlugin from './registerAuthzPlugin';
-import registerUsersPlugin from './registerUsersPlugin';
+import registerUsersPluginMobileApp from './authz/mobile-app/registerUsersPlugin';
+import registerUsersPluginWebAdminApp from './authz/web-admin/registerUsersPlugin';
 
 (async function startServer() {
   // Initialize Firebase SDK
@@ -12,7 +13,9 @@ import registerUsersPlugin from './registerUsersPlugin';
   await registerAuthzPlugin(server, firebaseApp);
   // Register user management endpoints
   // You can now do things like: create, delete, update, get users by default
-  await registerUsersPlugin(server, firebaseApp);
+  // Should support multiple times the same plugin registration
+  await registerUsersPluginMobileApp(server, firebaseApp);
+  await registerUsersPluginWebAdminApp(server, firebaseApp);
   // Start the server
   await server.start();
   console.log(`Server running ${server.info.uri}`);
