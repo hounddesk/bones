@@ -35,7 +35,7 @@ export async function createUser(
       const db = request.pre.firebase.firestore();
       const document = db.collection('users').doc(createdUser.uid);
       await document.set(user.extras);
-      const response = { ...createdUser, ...user.extras } as User;
+      const response = { ...createdUser, extras: user.extras } as User;
       return await request.pre.afterCreateUser(request, h, response);
     }
     return await request.pre.afterCreateUser(request, h, createdUser);
