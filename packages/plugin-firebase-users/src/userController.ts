@@ -29,7 +29,6 @@ export async function createUser(
         .auth()
         .setCustomUserClaims(createdUser.uid, user.claims);
     }
-
     // Store custom properties in Firestore
     if (user.extras) {
       const db = request.pre.firebase.firestore();
