@@ -17,6 +17,7 @@ export enum PasswordPolicyType {
   Normal = 'normal',
   Medium = 'medium',
   Complex = 'complex',
+  ReallyComplext = 'really-complex',
 }
 
 export enum PasswordsLengthsType {
@@ -25,4 +26,5 @@ export enum PasswordsLengthsType {
   Normal = 10,
   Medium = 10,
   Complex = 15,
+  ReallyComplext = 20,
 }
