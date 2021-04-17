@@ -5,9 +5,9 @@ Welcome to Hounddesk bones, we're an Open Source project from the [NodeCo](https
 Our goal is to provide a better way to connect with your community.
 Bones is part of a larger initiative called Hounddesk, we will add more details about it soon.
 
-<img src="https://avatars.githubusercontent.com/u/6078720?s=200&v=4" />
 
-This is a monorepo using Lerna and we publish our packages to NPM, you can find them here <a href="https://www.npmjs.com/search?q=hounddesk">https://www.npmjs.com/search?q=hounddesk</a>
+
+<img height="40" src="https://avatars.githubusercontent.com/u/6078720?s=200&v=4" /> This is a monorepo using Lerna and we publish our packages to NPM, you can find them here <a href="https://www.npmjs.com/search?q=hounddesk">https://www.npmjs.com/search?q=hounddesk</a>
 
 ## Currently under development
 
