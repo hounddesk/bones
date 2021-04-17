@@ -1,6 +1,7 @@
 #  🦴 Hounddesk | bones
 ![Node.js CI](https://github.com/hounddesk/bones/workflows/Node.js%20CI/badge.svg?branch=master)
 
+<img src="https://avatars.githubusercontent.com/u/62183765?s=200&v=4" />
 Welcome to Hounddesk bones, we're an Open Source project from the [NodeCo](https://github.com/node-co) community.
 Our goal is to provide a better way to connect with your community.
 Bones is part of a larger initiative called Hounddesk, we will add more details about it soon.
